@@ -1,0 +1,97 @@
+{% extends "layout.html" %}
+{% block page_title %}Create New Target:{% endblock %}
+{% block body %}
+{{ super() }}
+<body>
+
+<div class=container"><br>
+    <div class="row align-items-center justify-content-center">
+        <div class="col-md-4">
+            <form  action="" method="post" role="form">
+                {{ form.csrf }}
+                <div class="form-group">
+
+                    <label for="device_id">Target ID:</label>
+                    <input type="text" class="form-control" id="device_id" name="device_id" placeholder="device uuid ?">
+                    <br>
+                    <label for="device_name">Target Name:</label>
+                    <input type="text" class="form-control" id="device_name" name="device_name" placeholder="Name of device?">
+                </div>
+                <br>
+
+                <center>
+                    <button type="submit" class="btn btn-success">Create</button>
+                </center>
+            </form>
+
+            <br>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+
+            {% for message in messages %}
+            {% if "Error" not in message[1]: %}
+            <div class="alert alert-info">
+                <strong>Success! </strong> {{ message[1] }}
+            </div>
+            {% endif %}
+
+            {% if "Error" in message[1]: %}
+            <div class="alert alert-danger">
+                <strong>Error: </strong> {{ message[1] }}
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+        </div>
+        <br>
+    </div>
+    <div>
+
+        <ul class="list-group">
+            <table class="table" id="Controllers">
+                <tr>
+                    <th scope="col">Created By</th>
+                    <th scope="col">Controller Id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Security Token</th>
+                    <th scope="col">Update Status</th>
+                    <th scope="col">Hono Credentials</th>
+
+                </tr>
+                {%if controller :%}
+                    <tr>
+                        <td>{{controller['createdBy']}}</td>
+                        <td>{{controller['controllerId']}}</td>
+                        <td>{{controller['name']}}</td>
+                        <td>{{controller['securityToken']}}</td>
+                        <td>{{controller['updateStatus']}}</td>
+                        <div id="controller_credentials">
+                        <td>
+                            <table>
+                            {%for credentials in controller.credentials:%}
+                            <tr>
+                                <th>User: {{credentials['auth-id']}}</th>
+                            </tr><tr>
+                                <td>Active: {{credentials['enabled']}}</td>
+                            </tr><tr>
+                                <td>Secrets: {{credentials['secrets']}}</td>
+                            </tr>
+                            {%endfor%}
+                            </table>
+                        </td>
+                        </div>
+
+                    </tr>
+                {% endif %}
+            </table>
+                </td>
+
+            </table>
+        </ul>
+    </div>
+</div>
+</body>
+{% endblock %}
