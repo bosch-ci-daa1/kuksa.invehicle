@@ -23,7 +23,7 @@ class HonoClient:
         self.config = config
         self.http = Session()
 
-    def device_info(self, controller_id):
+    def get_device(self, controller_id):
         logger.info('Deviceinfo')
         result = dict()
         response: Response = self.http.get(
@@ -54,7 +54,7 @@ class HonoClient:
     def register_device(self, controller_id):
         logger.info('Register device')
 
-        response = self.http.post(
+        response: Response = self.http.post(
             url='{server}/registration/{tenant}'.format(server=self.config.server, tenant=self.config.tenant),
             json={
                 'device-id': controller_id,
@@ -95,7 +95,7 @@ class HonoClient:
             pwd = self.encrypt_string(general_pw)
             response = self.http.post(
                 url='{server}/credentials/{tenant}'.format(server=self.config.server, tenant=self.config.tenant),
-             #TODO handle password in gui
+                # TODO handle password in gui
                 json={
                     'device-id': controller_id,
                     'type': 'hashed-password',

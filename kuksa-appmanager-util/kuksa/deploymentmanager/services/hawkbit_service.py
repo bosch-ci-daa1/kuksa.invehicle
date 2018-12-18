@@ -1,7 +1,5 @@
 import logging
 import json
-from . import hono_service
-
 from requests import Session
 
 logging.basicConfig(level=logging.INFO)
@@ -13,7 +11,7 @@ class ConfigurationError(Exception):
         super().__init__(*args, **kwargs)
 
 
-class Config():
+class Config:
     def __init__(self, server: str, tenant: str, user: str, pw: str):
         self.server = server
         self.tenant = tenant
@@ -26,10 +24,8 @@ class HawkbitClient:
         self.logger = logging.getLogger(self.__class__.__module__ + '.' + self.__class__.__name__)
         self.config = config
         self.http = Session()
-        hono_config = hono_service.Config('http://13.93.66.252:8080', 'AD_TENANT')
-        self.hono_cli = hono_service.HonoClient(hono_config)
 
-    def targets_info(self):
+    def list_devices(self):
         logger.info('Get device info')
         response = self.http.get(
             url='{server}/rest/v1/targets'.format(server=self.config.server),
@@ -44,27 +40,28 @@ class HawkbitClient:
             return {}
         return result or {}
 
-    def target_info(self, controller_id):
+    def get_device(self, controller_id):
         logger.info('Get device info')
+        result = {}
         response = self.http.get(
             url='{server}/rest/v1/targets/{id}'.format(server=self.config.server, id=controller_id),
             auth=(self.config.user, self.config.pw),
         )
 
-        response.raise_for_status()
-        result = response.json()
         try:
-            result.update(self.hono_cli.device_info(controller_id))
-            result.update(self.hono_cli.device_authinfo(controller_id))
+            if response.status_code == 404:
+                return result, 404
+            response.raise_for_status()
+            result = response.json()
             print(json.dumps(result, indent=2, sort_keys=True))
         except Exception as e:
             logger.debug(e)
-        return result or {}
+        return response.status_code, result
 
     def create_device(self, controller_id, device_name):
         logger.info('Register device')
 
-        action_href = self.target_info(controller_id)
+        action_href = self.get_device(controller_id)
 
         if action_href.__len__() == 0:
             response = self.http.post(
@@ -78,11 +75,6 @@ class HawkbitClient:
             response.raise_for_status()
             result = response.json()
             print(json.dumps(result, indent=2, sort_keys=True))
-        try:
-            self.hono_cli.register_device(controller_id)
-        except Exception as e:
-            logger.debug(e)
-            return {}
 
     def delete_device(self, controller_id):
         logger.info('delete device')
