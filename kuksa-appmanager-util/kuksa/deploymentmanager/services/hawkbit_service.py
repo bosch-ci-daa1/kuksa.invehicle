@@ -56,25 +56,23 @@ class HawkbitClient:
             print(json.dumps(result, indent=2, sort_keys=True))
         except Exception as e:
             logger.debug(e)
-        return response.status_code, result
+        return result, response.status_code
 
     def create_device(self, controller_id, device_name):
         logger.info('Register device')
 
-        action_href = self.get_device(controller_id)
+        response = self.http.post(
+            url='{server}/rest/v1/targets'.format(server=self.config.server),
+            auth=(self.config.user, self.config.pw),
+            json=[dict(
+                controllerId=controller_id,
+                name=device_name)],
 
-        if action_href.__len__() == 0:
-            response = self.http.post(
-                url='{server}/rest/v1/targets'.format(server=self.config.server),
-                auth=(self.config.user, self.config.pw),
-                json=[dict(
-                    controllerId=controller_id,
-                    name=device_name)],
-
-            )
-            response.raise_for_status()
-            result = response.json()
-            print(json.dumps(result, indent=2, sort_keys=True))
+        )
+        response.raise_for_status()
+        result = response.json()
+        print(json.dumps(result, indent=2, sort_keys=True))
+        return  result, response.status_code
 
     def delete_device(self, controller_id):
         logger.info('delete device')
@@ -85,7 +83,7 @@ class HawkbitClient:
         )
         print(feedback_response)
 
-    def distributions_info(self):
+    def distribution_set(self):
         logger.info('Get Distributionlist')
         response = self.http.get(
             url='{server}/rest/v1/distributionsets'.format(server=self.config.server),
@@ -98,6 +96,20 @@ class HawkbitClient:
             logger.debug(e)
             return {}
         return result or {}
+
+    def get_device_distribution(self, controller_id):
+        logger.info('Get Distributionlist')
+        result = {}
+        response = self.http.get(
+            url='{server}/rest/v1/targets/{controller_id}/assignedDS'.format(server=self.config.server, controller_id=controller_id),
+            auth=(self.config.user, self.config.pw),
+        )
+        try:
+            response.raise_for_status()
+            result = response.json()
+        except Exception as e:
+            logger.debug(e)
+        return result , response.status_code
 
     def action_list(self):
         controller_id = str(input("Please enter controllerId:"))

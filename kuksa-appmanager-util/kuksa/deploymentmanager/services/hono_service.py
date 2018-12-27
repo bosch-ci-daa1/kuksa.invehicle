@@ -63,6 +63,7 @@ class HonoClient:
         try:
             response.raise_for_status()
             self.set_credentials(controller_id)
+            return response.status_code
         except Exception as e:
             logger.debug(e)
 
