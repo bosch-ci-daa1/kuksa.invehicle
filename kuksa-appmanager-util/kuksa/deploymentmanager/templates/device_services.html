@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block body %}
+{{ super() }}
+<body>
+
+<div class=container"><br>
+
+    <div class="panel panel-default">
+        <div class="panel-heading"><h2>Service List:</h2>
+            <div>
+                <table class="table" id="distribution">
+                    <tr>
+                        <th scope="row">Distribution Name</th>
+                        <th scope="row">Version</th>
+                        <th scope="row">Description</th>
+                        <th scope="row">Created By</th>
+                    </tr>
+                    <tr>
+                        <td>{{distributions['name']}}</td>
+                        <td>{{distributions['version']}}</td>
+                        <td>{{distributions['description']}}</td>
+                        <td>{{distributions['createdBy']}}</td>
+
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="panel-body">
+            {%for module in distributions['modules']%}
+            <div id="distribution_modules">
+                <table class="table" id="distribution_module">
+                    <tr>
+                        <th scope="row">Service Name</th>
+                        <th scope="row">Version</th>
+                        <th scope="row">ID</th>
+                        <th scope="row">Description</th>
+                        <th scope="row">Status</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">{{module['name']}}</th>
+                        <td>Version: {{module['version']}}</td>
+                        <td>Id: {{module['id']}}</td>
+                        <td>Description: {{module['description']}}</td>
+                        <td>Deleted: {{module['deleted']}}</td>
+                    </tr>
+                </table>
+            </div>
+            {%endfor%}
+        </div>
+    </div>
+
+</div>
+</body>
+{% endblock %}
