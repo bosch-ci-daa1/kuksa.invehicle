@@ -1,31 +1,29 @@
 {% extends "layout.html" %}
-{% block page_title %}TargetList:{% endblock %}
 {% block body %}
 {{ super() }}
 <body>
 
-<div class=container"><br>
-    <div class="row align-items-center justify-content-center">
-            <table class="table" id="Controllers">
-                <tr>
-                    <th scope="col">Created By</th>
-                    <th scope="col">Controller Id</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Security Token</th>
-                    <th scope="col">Update Status</th>
+<div class="panel panel-default">
+    <div class="panel-heading"><h2>Device List</h2></div>
 
-                </tr>
-                {%for controller in controllers['content']%}
-                    <tr>
-                        <td>{{controller['createdBy']}}</td>
-                        <td>{{controller['controllerId']}}</td>
-                        <td>{{controller['name']}}</td>
-                        <td>{{controller['securityToken']}}</td>
-                        <td>{{controller['updateStatus']}}</td>
-                    </tr>
-                {% endfor %}
-            </table>
-    </div>
+    <table class="table" id="Controllers">
+        <tr>
+            <th scope="col">Controller Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Security Token</th>
+            <th scope="col">Update Status</th>
+            <th scope="col">Created By</th>
+
+        </tr>
+        {%for controller in controllers['content']%}
+        <tr>
+            <td><a href="/get_device_services?device_id={{controller['controllerId']}}" >{{controller['controllerId']}}</a></td>
+            <td>{{controller['name']}}</td>
+            <td>{{controller['securityToken']}}</td>
+            <td>{{controller['updateStatus']}}</td>
+            <td>{{controller['createdBy']}}</td>
+        </tr>
+        {% endfor %}
+    </table>
 </div>
-</body>
 {% endblock %}

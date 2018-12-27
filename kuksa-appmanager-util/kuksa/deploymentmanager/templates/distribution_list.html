@@ -1,48 +1,26 @@
 {% extends "layout.html" %}
-{% block page_title %}Distribution List:{% endblock %}
 {% block body %}
 {{ super() }}
 <body>
+<div class="panel panel-default">
+    <div class="panel-heading"><h2>Disribution List</h2></div>
 
-<div class=container"><br>
-    <div class="row align-items-center justify-content-center">
-            <table class="table" id="Distributions">
-                <tr>
-                    <th scope="row">Created By</th>
-                    <th scope="row">Distribution Name</th>
-                    <th scope="row">Description</th>
-                    <th scope="row">Version</th>
-                    <th scope="row">Modules</th>
-                </tr>
-                {%for dist in distributions['content']%}
-                <tr>
-                        <td>{{dist['createdBy']}}</td>
-                        <td>{{dist['name']}}</td>
-                        <td>{{dist['description']}}</td>
-                        <td>{{dist['version']}}</td>
-                        <td>
-                        {%for module in dist['modules']%}
-                        <div id="controller_credentials">
-                            <table>
-                                <tr>
-                                    <th scope="col">Name: {{module['name']}}</th>
-                                </tr><tr>
-                                    <td>Id: {{module['id']}}</td>
-                                </tr><tr>
-                                    <td>Description: {{module['description']}}</td>
-                                </tr><tr>
-                                    <td>Version: {{module['version']}}</td>
-                                </tr><tr>
-                                    <td>Deleted: {{module['deleted']}}</td>
-                                </tr>
-                            </table>
-                        </div>
-                        {%endfor%}
-                        </td>
-                </tr>
-                {% endfor %}
-            </table>
-    </div>
+    <table class="table" id="Controllers">
+        <tr>
+            <th scope="col">Distribution Name</th>
+            <th scope="col">Version</th>
+            <th scope="col">Description</th>
+            <th scope="col">Created By</th>
+        </tr>
+        {%for dist in distributions['content']%}
+        <tr>
+            <td>{{dist['name']}}</td>
+            <td>{{dist['version']}}</td>
+            <td>{{dist['description']}}</td>
+            <td>{{dist['createdBy']}}</td>
+        </tr>
+        {% endfor %}
+    </table>
 </div>
 </body>
 {% endblock %}

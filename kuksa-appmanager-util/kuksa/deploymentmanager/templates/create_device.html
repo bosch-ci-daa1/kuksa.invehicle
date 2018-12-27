@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block page_title %}Create New Target:{% endblock %}
+{% block page_title %}Create New Device:{% endblock %}
 {% block body %}
 {{ super() }}
 <body>
@@ -7,14 +7,14 @@
 <div class=container"><br>
     <div class="row align-items-center justify-content-center">
         <div class="col-md-4">
-            <form  action="" method="post" role="form">
+            <form action="" method="post" role="form">
                 {{ form.csrf }}
                 <div class="form-group">
 
-                    <label for="device_id">Target ID:</label>
+                    <label for="device_id">Device ID:</label>
                     <input type="text" class="form-control" id="device_id" name="device_id" placeholder="device uuid ?">
                     <br>
-                    <label for="device_name">Target Name:</label>
+                    <label for="device_name">Device Name:</label>
                     <input type="text" class="form-control" id="device_name" name="device_name" placeholder="Name of device?">
                 </div>
                 <br>
@@ -58,37 +58,18 @@
                     <th scope="col">Name</th>
                     <th scope="col">Security Token</th>
                     <th scope="col">Update Status</th>
-                    <th scope="col">Hono Credentials</th>
+                    <!--<th scope="col">Hono Credentials</th>-->
 
                 </tr>
                 {%if controller :%}
-                    <tr>
-                        <td>{{controller['createdBy']}}</td>
-                        <td>{{controller['controllerId']}}</td>
-                        <td>{{controller['name']}}</td>
-                        <td>{{controller['securityToken']}}</td>
-                        <td>{{controller['updateStatus']}}</td>
-                        <div id="controller_credentials">
-                        <td>
-                            <table>
-                            {%for credentials in controller.credentials:%}
-                            <tr>
-                                <th>User: {{credentials['auth-id']}}</th>
-                            </tr><tr>
-                                <td>Active: {{credentials['enabled']}}</td>
-                            </tr><tr>
-                                <td>Secrets: {{credentials['secrets']}}</td>
-                            </tr>
-                            {%endfor%}
-                            </table>
-                        </td>
-                        </div>
-
-                    </tr>
+                <tr>
+                    <td>{{controller['createdBy']}}</td>
+                    <td><a href="/get_device_services?device_id={{controller['controllerId']}}" >{{controller['controllerId']}}</a></td>
+                    <td>{{controller['name']}}</td>
+                    <td>{{controller['securityToken']}}</td>
+                    <td>{{controller['updateStatus']}}</td>
+                </tr>
                 {% endif %}
-            </table>
-                </td>
-
             </table>
         </ul>
     </div>
