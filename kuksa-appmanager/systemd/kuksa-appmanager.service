@@ -1,0 +1,9 @@
+[Unit]
+Description = Pulls new apps from hawkbit and installs them as docker container.
+
+[Service]
+WorkingDirectory=/usr/bin/kuksa-appmanager
+ExecStart=/usr/bin/python3 -m kuksa.appmanager
+
+[Install]
+WantedBy = multi-user.target
