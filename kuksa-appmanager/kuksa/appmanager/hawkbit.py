@@ -118,7 +118,7 @@ class Client:
         # TODO: handle response errors
         actions_response.raise_for_status()
 
-        actions: dict = actions_response.json()
+        actions = actions_response.json()
         self.logger.debug("Received actions: {}".format(actions))
 
         # update polling interval
@@ -251,13 +251,21 @@ class DeploymentJob:
                     self.__flash_firmware(deployment_firmwares[0])
                 else:
                     deployment_apps = {chunk['name']: chunk for chunk in deployment_chunks.values() if chunk['type'] == 'application'}
+                    if deployment_apps.get('UNINSTALLED_ALL'):
+                        self.logger.debug('Uninstall all apps')
 
-                    deployment_docker_apps = self.__get_docker_apps(deployment_apps)
+                        with DockerSession(self.__cancelled_check) as docker:
+                            docker.undeploy_all_services()
 
-                    with DockerSession(self.__cancelled_check) as docker:
-                        docker.deploy(deployment_docker_apps)
+                        self.__send_feedback('closed', 'success')
 
-                    self.__send_feedback('closed', 'success')
+                    else:
+                        deployment_docker_apps = self.__get_docker_apps(deployment_apps)
+
+                        with DockerSession(self.__cancelled_check) as docker:
+                            docker.deploy(deployment_docker_apps)
+
+                        self.__send_feedback('closed', 'success')
             except ConfigurationError as error:
                 self.logger.error(error)
                 # TODO: forward error message to HawkBit
