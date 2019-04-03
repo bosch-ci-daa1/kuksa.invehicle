@@ -10,6 +10,7 @@
 
 import logging
 import os
+import configparser
 
 from . import hawkbit
 from . import hono
@@ -17,6 +18,14 @@ from .utils import ConfigurationError
 
 logging.basicConfig(format='%(asctime)s - %(threadName)s - %(levelname)s - %(name)s - %(message)s', level=logging.DEBUG)
 logger = logging.getLogger('kuksa.appmanager')
+
+
+def __set_env():
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+    for cfg in config:
+        for option in config[cfg]:
+            os.environ[option.upper()] = config[cfg].get(option)
 
 
 def __get_config_value(name):
@@ -27,6 +36,7 @@ def __get_config_value(name):
 
 
 try:
+    __set_env()
     HAWKBIT_CONFIG = hawkbit.Config(
         server=__get_config_value('HAWKBIT_SERVER'),
         tenant=__get_config_value('HAWKBIT_TENANT'),
