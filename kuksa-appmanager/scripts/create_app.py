@@ -25,7 +25,7 @@ import subprocess
 
 from requests import Session, HTTPError
 
-DEFAULT_SERVER = 'http://localhost:8080'
+DEFAULT_SERVER = 'http://65.52.133.94:8080'
 DEFAULT_USERNAME = 'admin'
 DEFAULT_PASSWORD = 'admin'
 
